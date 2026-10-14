@@ -10,6 +10,10 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out this repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: Copy the previously compiled finalpool task tree
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
