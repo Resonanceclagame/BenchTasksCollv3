@@ -1,0 +1,25 @@
+name: Sync implemented tasks to finalpool
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy the previously compiled finalpool task tree
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          git fetch --depth 1 https://github.com/tooluse222/BenchTasksCollv3.git +refs/heads/finalpool:refs/remotes/task-source
+          git checkout --detach refs/remotes/task-source
+          count=$(find tasks/finalpool -mindepth 1 -maxdepth 1 -type d | wc -l)
+          [ "$count" -eq 77 ]
+          files=$(find tasks/finalpool -type f | wc -l)
+          [ "$files" -eq 385 ]
+          remote="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force "$remote" HEAD:refs/heads/finalpool
