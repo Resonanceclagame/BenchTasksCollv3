@@ -15,8 +15,6 @@ jobs:
         with:
           fetch-depth: 1
       - name: Copy the previously compiled finalpool task tree
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eu
           git fetch --depth 1 https://github.com/tooluse222/BenchTasksCollv3.git +refs/heads/finalpool:refs/remotes/task-source
@@ -25,5 +23,5 @@ jobs:
           [ "$count" -eq 77 ]
           files=$(find tasks/finalpool -type f | wc -l)
           [ "$files" -eq 385 ]
-          remote="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force "$remote" HEAD:refs/heads/finalpool
+          echo "Copying $files files in $count task directories from tooluse222/finalpool"
+          git push --verbose --progress origin HEAD:refs/heads/finalpool
